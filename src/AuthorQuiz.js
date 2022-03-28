@@ -1,5 +1,5 @@
-import React, {Component} from 'react';
-import logo from './logo.svg';
+import React from 'react';
+//import logo from './logo.svg';
 import './App.css';
 import './bootstrap.min.css'
 
@@ -35,11 +35,11 @@ function Hero() {
   </div>);
 }
 
-function Turn({authors, books}) {
+function Turn({author, books}) {
   return (
     <div className="row turn" style={{backgroundColor: "white"}}>
       <div className="col-4 offset-1">
-        <img src={authors.imageUrl} className="authorimage" alt="Author"/>
+        <img src={author.imageUrl} className="authorimage" alt="Author"/>
       </div>
       <div className="col-6">
         {books.map((title) => <p>{title}</p>)}
@@ -55,7 +55,7 @@ function Continue () {
 function Footer() {
   return (<div className="row">
     <div className="col-12">
-      <p className="text-muted credit">All images are from <a href="#">Wikimedia Commons</a> and are in the public domain.</p>
+      <p className="text-muted credit">All images are from <a href="https://commons.wikimedia.org/">Wikimedia Commons</a> and are in the public domain.</p>
     </div>
   </div>);
 }
