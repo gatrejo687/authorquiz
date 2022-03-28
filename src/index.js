@@ -4,13 +4,14 @@ import './index.css';
 import AuthorQuiz from './AuthorQuiz';
 import reportWebVitals from './reportWebVitals';
 import registerServiceWorker from './registerServiceWorker';
+import {shuffle, sample} from 'underscore';
 
 const authors = [
   {
     name: 'Mark Twain',
     imageUrl: 'images/authors/marktwain.jpg',
     imageSource: 'Google',
-    books: ['The Adventures of Huckleberry Finn']
+    books: ['The Adventures of Huckleberry Finn','Life on the Mississippi', 'Roughing it']
   },
   {
     name: 'Joseph Conrad',
@@ -46,19 +47,41 @@ const authors = [
   }
 ];
 
-const state = {
-  turnData: {
-    author: authors[0],
-    books: authors[0].books
+function getTurnData(authors) {
+  const allBooks = authors.reduce(function (p, c, i) {
+    return p.concat(c.books);
+  }, []);
+  const fourRandomBooks = shuffle(allBooks).slice(0,4);
+  const answer = sample(fourRandomBooks);
+
+  return {
+    books: fourRandomBooks,
+    author: authors.find((author) =>
+      author.books.some((title) =>
+        title === answer))
   }
+}
+
+const state = {
+  turnData: getTurnData(authors),
+  highlight: ''
 };
 
-ReactDOM.render(
-  <AuthorQuiz {...state} />, document.getElementById('root')
-);
+function onAnswerSelected(answer) {
+  const isCorrect = state.turnData.author.books.some((book) => book === answer);
+  //console.log("Is the answer: " + isCorrect);
+  state.highlight = isCorrect ? 'correct' : 'wrong';
+  //console.log("Highlight value: " + state.highlight);
+  render();
+}
+
+function render() {
+  ReactDOM.render(<AuthorQuiz {...state} onAnswerSelected={onAnswerSelected} />, document.getElementById('root'));
+}
+render();
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals(console.log);
+reportWebVitals();
 registerServiceWorker();
